@@ -1,7 +1,6 @@
 <script>
 import InstagramText from "@/components/icons/InstagramText.vue";
 import LoginForm from '@/components/forms/LoginForm.vue';
-import FacebookIcon from "@/components/icons/FacebookIcon.vue";
 
 export default {
   components:{InstagramText, LoginForm},

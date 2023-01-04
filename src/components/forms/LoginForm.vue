@@ -4,26 +4,82 @@ import BaseInput from "@/components/inputs/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import FormBorder from "@/components/FormBorder.vue";
 import FacebookIcon from "@/components/icons/FacebookIcon.vue";
+import { ref } from 'vue';
 
 
 export default {
+  emits:['updateValues',  'visiblePassword'],
   components:{BaseInput,BaseButton, Form, FormBorder, FacebookIcon},
   setup() {
+   
+   const usernameValue=ref('')
+   const passwordValue=ref('')
+   const registerButtonActivated=ref(false)
+   const passwordValueLength=ref(false)
+
+   const emailRegex=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+   const usernameRegex=/^[a-z0-9_]{2,}$/
+   const passwordRegex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
+
+
    function onSubmit(){
-     console.log('submited')
+    if((usernameValue.value.toLowerCase().match(emailRegex) || usernameValue.value.match(usernameRegex)) && passwordValue.value.match(passwordRegex)){
+      console.log('submited')
+    }
    }
 
-   return { onSubmit }
-  },
+    // function counter(data, state, input){
+    //   if
+    // registerButtonCounter.value--
+    // if(data!='' && state!='' && input=='username' && (data.toLowerCase().match(emailRegex) || data.match(usernameRegex))){
+    //   registerButtonCounter.value=registerButtonCounter.value+2
+    // }
+    //   if(data!='' && input=='password' && (data.match(passwordRegex))){
+    //     registerButtonCounter.value=registerButtonCounter.value+2
+    //   }
+    // if(data=='') registerButtonCounter.value--
+    // } 
+
+
+function inputValuesUpdate(data){
+  if(data.name=='username'){
+    usernameValue.value=data.value
+    // counter(usernameValue.value, data.previousValue, data.name)
+  }
+  if(data.name=='password'){
+    passwordValue.value=data.value
+    if(passwordValue.value!='') passwordValueLength.value=true
+    if(passwordValue.value=='') passwordValueLength.value=false
+    // counter(passwordValue.value, data.previousValue, data.name)
+  }
+  if((usernameValue.value.toLowerCase().match(emailRegex) || usernameValue.value.match(usernameRegex)) && (passwordValue.value.match(passwordRegex))){
+   registerButtonActivated.value=true
+  }else if(usernameValue.value=='' || passwordValue.value==''){    
+    registerButtonActivated.value=false
+  }else{
+    registerButtonActivated.value=false
+
+  }
+}
+
+function changePasswordType(){
+ const elem = document.querySelector('[name="password"]')
+ if(elem.getAttribute("type")){
+   elem.removeAttribute("type")
+ }else{
+   elem.setAttribute("type", "password")
+ }
+}
+   return { onSubmit, inputValuesUpdate, registerButtonActivated, changePasswordType, passwordValueLength }
+  }
 }
 </script>
 
-
 <template>
  <Form @submit="onSubmit" class="flex flex-col items-center justify-center gap-[1.8rem]">
-    <base-input name="username" label="Phone number, username or email"></base-input>
-    <base-input name="password" label="Password"></base-input>
-    <base-button type="submit" class="mt-[1.6rem]">Log in</base-button>
+    <base-input @update-values="inputValuesUpdate" name="username" label="Username or Email"></base-input>
+    <base-input @update-values="inputValuesUpdate" @visible-password="changePasswordType" :passwordIsFilled="passwordValueLength" type="password" name="password" label="Password"></base-input>
+    <base-button type="submit" class="mt-[1.6rem]" :class="[!registerButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="!registerButtonActivated">Log in</base-button>
     <form-border class="mt-[1rem]"></form-border>
     <div class="flex flex-col items-center justify-center gap-[2rem]">
       <div class="cursor-pointer flex items-center justify-center gap-[1rem]"> 
