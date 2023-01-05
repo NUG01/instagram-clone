@@ -6,13 +6,17 @@ import ErrorIcon from "@/components/icons/InputError.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import FormBorder from "@/components/FormBorder.vue";
 import { ref, watch, computed} from 'vue';
+import axios from "@/config/axios/index.js";
+import { useRegisterStore } from '@/stores/RegistrationStore.js';
+
 
 
 export default {
   emits:['updateValues', 'visiblePassword'],
   components:{BaseInput,BaseButton, Form, FormBorder, SuccessIcon, ErrorIcon},
-  setup() {
-    
+  setup(props, context) {
+    const registrationFormData = useRegisterStore();
+
     const emailValue=ref('')
     const fullnameValue=ref('')
     const usernameValue=ref('')
@@ -25,23 +29,33 @@ export default {
     const fullnameNotValidated=ref(false)
     const usernameNotValidated=ref(false)
     const passwordNotValidated=ref(false)
-    const registerButtonCounter=ref(0)
+    const registerButtonActivated=ref(false)
     const passwordValueLength=ref(false)
 
     const emailRegex=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const fullnameRegex=/^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/
     const usernameRegex=/^[a-z0-9_]{2,}$/
-    const passwordRegex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
+    const passwordRegex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$/
    
    function onSubmit(){
     if(emailValue.value.toLowerCase().match(emailRegex) && fullnameValue.value.match(fullnameRegex) && usernameValue.value.match(usernameRegex) && passwordValue.value.match(passwordRegex)){
-      console.log(emailValue.value)
+      context.emit('dateForm')
+      registrationFormData.setEmail(emailValue.value)
+      registrationFormData.setUsername(usernameValue.value)
+      registrationFormData.setFullname(fullnameValue.value)
+      registrationFormData.setPassword(passwordValue.value)
     }
-   }
-
-   function counter(data, state){
-    if(data!='' && state=='') registerButtonCounter.value++
-    if(data=='') registerButtonCounter.value--
+    // try{
+    //   await axios.post('register', {
+    //     username: usernameValue.value, 
+    //     email: emailValue.value, 
+    //     fullname: fullnameValue.value, 
+    //     password: passwordValue.value,
+    //     })
+    //  }catch(error){
+    //      console.log('ohno')
+    //      return;
+    // }
    }
 
    function validationStateControl(value, successValue, errorValue, regex){
@@ -62,24 +76,29 @@ function inputValuesUpdate(data){
   if(data.name=='email'){
     emailValue.value=data.value
     validationStateControl(emailValue, emailValidated, emailNotValidated, emailValue.value.toLowerCase().match(emailRegex))
-    counter(emailValue.value, data.previousValue)
   }
   if(data.name=='fullname'){
     fullnameValue.value=data.value
     validationStateControl(fullnameValue, fullnameValidated, fullnameNotValidated, fullnameValue.value.match(fullnameRegex))
-    counter(fullnameValue.valuem, data.previousValue)
   }
   if(data.name=='username'){
     usernameValue.value=data.value
     validationStateControl(usernameValue, usernameValidated, usernameNotValidated, usernameValue.value.match(usernameRegex))
-    counter(usernameValue.value, data.previousValue)
   }
   if(data.name=='password'){
     passwordValue.value=data.value
     if(passwordValue.value!='') passwordValueLength.value=true
     if(passwordValue.value=='') passwordValueLength.value=false
     validationStateControl(passwordValue, passwordValidated, passwordNotValidated, passwordValue.value.match(passwordRegex))
-    counter(passwordValue.value, data.previousValue)
+  }
+
+  if(emailValue.value.toLowerCase().match(emailRegex) && usernameValue.value.match(usernameRegex) && (passwordValue.value.match(passwordRegex)) && fullnameValue.value.match(fullnameRegex)){
+   registerButtonActivated.value=true
+  }else if(usernameValue.value=='' || passwordValue.value==''){    
+    registerButtonActivated.value=false
+  }else{
+    registerButtonActivated.value=false
+
   }
 }
 
@@ -97,7 +116,7 @@ function changePasswordType(){
    return { 
     onSubmit, 
     inputValuesUpdate, 
-    registerButtonCounter, 
+    registerButtonActivated, 
     emailValidated, 
     emailNotValidated, 
     fullnameValidated, 
@@ -133,7 +152,7 @@ function changePasswordType(){
       <template v-slot:success><success-icon></success-icon></template>
       <template v-slot:error><error-icon></error-icon></template>
     </base-input>
-    <base-button type="submit" class="mt-[1.6rem]" :class="[registerButtonCounter!=4 ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="registerButtonCounter!=4">Sign up</base-button>
+    <base-button type="submit" class="mt-[1.6rem]" :class="[!registerButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="!registerButtonActivated">Sign up</base-button>
   </Form>
 </template>
 

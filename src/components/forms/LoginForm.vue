@@ -5,6 +5,7 @@ import BaseButton from "@/components/BaseButton.vue";
 import FormBorder from "@/components/FormBorder.vue";
 import FacebookIcon from "@/components/icons/FacebookIcon.vue";
 import { ref } from 'vue';
+import axios from "@/config/axios/index.js";
 
 
 export default {
@@ -22,35 +23,28 @@ export default {
    const passwordRegex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
 
 
-   function onSubmit(){
+  async function onSubmit(){
+
     if((usernameValue.value.toLowerCase().match(emailRegex) || usernameValue.value.match(usernameRegex)) && passwordValue.value.match(passwordRegex)){
       console.log('submited')
+     try{
+      await axios.post('login', {username: usernameValue.value, password: passwordValue.value,})
+     }catch(error){
+         console.log('ohno')
+         return;
+    }
     }
    }
-
-    // function counter(data, state, input){
-    //   if
-    // registerButtonCounter.value--
-    // if(data!='' && state!='' && input=='username' && (data.toLowerCase().match(emailRegex) || data.match(usernameRegex))){
-    //   registerButtonCounter.value=registerButtonCounter.value+2
-    // }
-    //   if(data!='' && input=='password' && (data.match(passwordRegex))){
-    //     registerButtonCounter.value=registerButtonCounter.value+2
-    //   }
-    // if(data=='') registerButtonCounter.value--
-    // } 
 
 
 function inputValuesUpdate(data){
   if(data.name=='username'){
     usernameValue.value=data.value
-    // counter(usernameValue.value, data.previousValue, data.name)
   }
   if(data.name=='password'){
     passwordValue.value=data.value
     if(passwordValue.value!='') passwordValueLength.value=true
     if(passwordValue.value=='') passwordValueLength.value=false
-    // counter(passwordValue.value, data.previousValue, data.name)
   }
   if((usernameValue.value.toLowerCase().match(emailRegex) || usernameValue.value.match(usernameRegex)) && (passwordValue.value.match(passwordRegex))){
    registerButtonActivated.value=true
