@@ -70,7 +70,7 @@ export default {
   <div class="absolute top-0 right-0" :class="[type ? '-translate-x-[12%] flex items-center justify-center gap-[0.5rem] translate-y-[25%]' : '-translate-x-1/2 translate-y-1/2']">
   <slot v-if="validationSuccess" name="success"></slot>
   <slot v-if="validationError" name="error"></slot>
-  <div v-if="type && passwordValueIsFilled" class="text-[2.7rem] text-[#000] font-[500]" @click="changePasswordType($event)">{{ passwordVisibilityState }}</div>
+  <div v-if="type && passwordValueIsFilled" class="text-[2.7rem] text-[#000] font-[500] cursor-pointer" @click="changePasswordType($event)">{{ passwordVisibilityState }}</div>
   </div>
 </div>
 </template>
