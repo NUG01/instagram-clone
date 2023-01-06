@@ -31,13 +31,22 @@ export default {
     const passwordNotValidated=ref(false)
     const registerButtonActivated=ref(false)
     const passwordValueLength=ref(false)
+    const credentialsError=ref(false)
+    const error=ref('')
 
     const emailRegex=/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const fullnameRegex=/^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/
     const usernameRegex=/^[a-z0-9_]{2,}$/
     const passwordRegex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$/
    
-   function onSubmit(){
+  async function onSubmit(){
+    credentialsError.value=false
+    error.value=''
+     try{
+       await axios.post('check-credentials', {
+         username: usernameValue.value, 
+         email: emailValue.value, 
+      })
     if(emailValue.value.toLowerCase().match(emailRegex) && fullnameValue.value.match(fullnameRegex) && usernameValue.value.match(usernameRegex) && passwordValue.value.match(passwordRegex)){
       context.emit('dateForm')
       registrationFormData.setEmail(emailValue.value)
@@ -45,17 +54,10 @@ export default {
       registrationFormData.setFullname(fullnameValue.value)
       registrationFormData.setPassword(passwordValue.value)
     }
-    // try{
-    //   await axios.post('register', {
-    //     username: usernameValue.value, 
-    //     email: emailValue.value, 
-    //     fullname: fullnameValue.value, 
-    //     password: passwordValue.value,
-    //     })
-    //  }catch(error){
-    //      console.log('ohno')
-    //      return;
-    // }
+     }catch(err){
+      error.value=err.response.data
+      credentialsError.value=true
+    }
    }
 
    function validationStateControl(value, successValue, errorValue, regex){
@@ -126,7 +128,9 @@ function changePasswordType(){
     passwordValidated, 
     passwordNotValidated,
     changePasswordType,
-    passwordValueLength
+    passwordValueLength,
+    credentialsError,
+    error
     
     }
   },
@@ -153,6 +157,7 @@ function changePasswordType(){
       <template v-slot:error><error-icon></error-icon></template>
     </base-input>
     <base-button type="submit" class="mt-[1.6rem]" :class="[!registerButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="!registerButtonActivated">Sign up</base-button>
+    <div v-if="credentialsError" class="text-[#FA383E] text-[1.8rem] text-center">{{ error }}</div>
   </Form>
 </template>
 

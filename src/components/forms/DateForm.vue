@@ -11,6 +11,9 @@ export default {
   setup(props, context) {
     const registrationFormData = useRegisterStore();
 
+    const credentialsError=ref(false)
+    const error=ref('')
+
 
     const submitState = computed(() => {
     return props.submit
@@ -37,27 +40,26 @@ export default {
     });
 
    async function onSubmit(){
+      context.emit('registrationFailure', '')
       registrationFormData.setMonth(month.value)
       registrationFormData.setDay(day.value)
       registrationFormData.setYear(year.value)
       const dateStr=registrationFormData.getYear+'-'+registrationFormData.getMonth+'-'+registrationFormData.getDay
       const transformDate=new Date(dateStr)
       const isoDate=transformDate.toISOString()
+      registrationFormData.setISODate(isoDate)
        try{
-      await axios.post('register', {
+      await axios.post('insert-code', {
         username: registrationFormData.getUsername, 
-        email: registrationFormData.getEmail, 
-        fullname: registrationFormData.getFullname, 
-        password: registrationFormData.getPassword,
-        birth_date: isoDate,
+        email: registrationFormData.getEmail,
         })
-     }catch(error){
-         console.log('ohno')
-         return;
+        context.emit('emailCode')
+     }catch(err){
+     alert(err)
     }
     }
     function verifyYear(){
-      if((now-document.getElementById('years').value)<6){
+      if((now-document.getElementById('years').value)<5){
         context.emit('buttonDisability', false)
       }else{
         context.emit('buttonDisability', true)
