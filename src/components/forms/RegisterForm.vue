@@ -48,11 +48,15 @@ export default {
          email: emailValue.value, 
       })
     if(emailValue.value.toLowerCase().match(emailRegex) && fullnameValue.value.match(fullnameRegex) && usernameValue.value.match(usernameRegex) && passwordValue.value.match(passwordRegex)){
+      console.log('look2')
       context.emit('dateForm')
       registrationFormData.setEmail(emailValue.value)
       registrationFormData.setUsername(usernameValue.value)
       registrationFormData.setFullname(fullnameValue.value)
       registrationFormData.setPassword(passwordValue.value)
+    }else
+    if(registrationFormData.getEmail.toLowerCase().match(emailRegex) && registrationFormData.getFullname.match(fullnameRegex) && registrationFormData.getUsername.match(usernameRegex) && passwordValue.value.match(passwordRegex)){
+      context.emit('dateForm')
     }
      }catch(err){
       error.value=err.response.data
@@ -67,6 +71,7 @@ export default {
     }else if(regex){
       successValue.value=true
       errorValue.value=false
+      return true;
     }else{
       successValue.value=false
       errorValue.value=true
@@ -77,14 +82,17 @@ export default {
 function inputValuesUpdate(data){
   if(data.name=='email'){
     emailValue.value=data.value
+    registrationFormData.setEmail(data.value)
     validationStateControl(emailValue, emailValidated, emailNotValidated, emailValue.value.toLowerCase().match(emailRegex))
   }
   if(data.name=='fullname'){
     fullnameValue.value=data.value
+    registrationFormData.setFullname(data.value)
     validationStateControl(fullnameValue, fullnameValidated, fullnameNotValidated, fullnameValue.value.match(fullnameRegex))
   }
   if(data.name=='username'){
     usernameValue.value=data.value
+    registrationFormData.setUsername(data.value)
     validationStateControl(usernameValue, usernameValidated, usernameNotValidated, usernameValue.value.match(usernameRegex))
   }
   if(data.name=='password'){
@@ -95,13 +103,16 @@ function inputValuesUpdate(data){
   }
 
   if(emailValue.value.toLowerCase().match(emailRegex) && usernameValue.value.match(usernameRegex) && (passwordValue.value.match(passwordRegex)) && fullnameValue.value.match(fullnameRegex)){
-   registerButtonActivated.value=true
+    registerButtonActivated.value=true
   }else if(usernameValue.value=='' || passwordValue.value==''){    
     registerButtonActivated.value=false
   }else{
     registerButtonActivated.value=false
 
   }
+    if(registrationFormData.getFromDateToRegister && data.name=='password' && validationStateControl(passwordValue, passwordValidated, passwordNotValidated, passwordValue.value.match(passwordRegex))){
+      registerButtonActivated.value=true
+    }
 }
 
 
@@ -130,7 +141,8 @@ function changePasswordType(){
     changePasswordType,
     passwordValueLength,
     credentialsError,
-    error
+    error,
+    fullnameValue
     
     }
   },

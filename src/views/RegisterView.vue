@@ -11,6 +11,7 @@ import { ref, watch } from "vue";
 import { useRegisterStore } from '@/stores/RegistrationStore.js';
 import axios from "@/config/axios/index.js";
 import { Form } from 'vee-validate';
+import { useRouter } from 'vue-router';
 
 
 export default {
@@ -18,6 +19,7 @@ export default {
   components:{InstagramText, BaseButton, FacebookIcon, FormBorder, RegisterForm, CakeIcon, BirthdayModal, DateForm, Form},
   setup() {
     const registrationFormData = useRegisterStore();
+    const router = useRouter();
 
     const showDateForm=ref(false)
     const showCredentialsForm=ref(true)
@@ -67,8 +69,16 @@ export default {
         birth_date: registrationFormData.getISODate,
         code:document.getElementById('code').value
         })
+        registrationFormData.setEmail(null)
+        registrationFormData.setUsername(null)
+        registrationFormData.setFullname(null)
+        registrationFormData.setMonth(null)
+        registrationFormData.setDay(null)
+        registrationFormData.setYear(null)
+        registrationFormData.setCode(null)
+        registrationFormData.setFromDateToRegister(false)
+        router.push({ name : 'home' })
         }catch(err){
-          alert('ops')
         credentialsError.value=true
       if(err.response.data.message){
         error.value=err.response.data.message
@@ -89,8 +99,10 @@ export default {
     watch(nextButtonActivated, (currentValue, oldValue) => {
      dateError.value=oldValue
 });
-
-
+function goBackToRegistration(){
+  showDateForm.value=false
+  registrationFormData.setFromDateToRegister(true)
+}
     return {
       showDateForm, 
       showBirthdayModal, 
@@ -107,7 +119,8 @@ export default {
       resendCode, 
       getCodeValue,
       codeFormButtonActivated,
-      submitRegistration
+      submitRegistration,
+      goBackToRegistration
        
     }
   },
@@ -140,7 +153,7 @@ export default {
       <p class="text-[1.6rem] text-[#4a4a4ab4] font-[400] text-center mt-[2rem]">Use your own birthday, even if this account is for a business, a pet, or something else</p>
       <div v-if="credentialsError" class="text-[#FA383E] text-[1.8rem] text-center mt-[3rem]">{{ error }}</div>
       <base-button @click="submitDateForm" type="button" width="w-[100%]" :class="[!nextButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '', credentialsError ? 'mt-[1rem]' : 'mt-[3rem]']" :disabled="!nextButtonActivated">Next</base-button>
-      <p class="text-[2.4rem] font-[500] text-center mt-[2rem] text-[#47afff] cursor-pointer" @click="showDateForm=false">Go Back</p>
+      <p class="text-[2.4rem] font-[500] text-center mt-[2rem] text-[#47afff] cursor-pointer" @click="goBackToRegistration">Go Back</p>
     </div>
   </div>
   <div v-if="!showCredentialsForm" class="w-[100%] bg-[#ffffff90] py-[4rem] px-[9rem] border-[1px] border-solid border-[#cdcdcd] rounded-[1px] flex flex-col items-center">

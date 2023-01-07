@@ -12,6 +12,7 @@ export const useRegisterStore = defineStore("useRegisterStore", {
         year:null,
         ISODate:null,
         code:null,
+        fromDateToRegister:false,
 
       }
     },
@@ -26,6 +27,7 @@ export const useRegisterStore = defineStore("useRegisterStore", {
       getYear: (state)=>state.year,
       getISODate: (state)=>state.ISODate,
       getCode: (state)=>state.code,
+      getFromDateToRegister: (state)=>state.fromDateToRegister,
     },
 
     actions:{
@@ -55,6 +57,9 @@ export const useRegisterStore = defineStore("useRegisterStore", {
       },
       setCode(code){
         this.code=code
+      },
+      setFromDateToRegister(value){
+        this.fromDateToRegister=value
       },
     },
 

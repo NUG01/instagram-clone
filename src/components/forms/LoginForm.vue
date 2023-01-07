@@ -26,12 +26,10 @@ export default {
   async function onSubmit(){
 
     if((usernameValue.value.toLowerCase().match(emailRegex) || usernameValue.value.match(usernameRegex)) && passwordValue.value.match(passwordRegex)){
-      console.log('submited')
      try{
       await axios.post('login', {username: usernameValue.value, password: passwordValue.value,})
      }catch(error){
-         console.log('ohno')
-         return;
+         alert(error)
     }
     }
    }
