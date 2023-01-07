@@ -13,6 +13,9 @@ export default {
 
     const credentialsError=ref(false)
     const error=ref('')
+    let month;
+    let day;
+    let year;
 
 
     const submitState = computed(() => {
@@ -22,9 +25,22 @@ export default {
     const date = new Date();
 
     const months=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    const month=ref(months[date.getMonth() + 1])
-    const day=ref(date.getDate())
-    const year=ref(date.getFullYear())
+     
+    if(registrationFormData.getMonth){
+      month=ref(registrationFormData.getMonth)
+    }else{
+       month=ref(months[date.getMonth() + 1])
+    }
+    if(registrationFormData.getDay){
+      day=ref(registrationFormData.getDay)
+    }else{
+       day=ref(date.getDate())
+    }
+    if(registrationFormData.getYear){
+      year=ref(registrationFormData.getYear)
+    }else{
+       year=ref(date.getFullYear())
+    }
 
     const now=new Date().getFullYear()
     let eligibleYears=[]

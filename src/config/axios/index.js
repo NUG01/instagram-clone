@@ -7,18 +7,19 @@ const axiosInstance = axios.create({
   timeout: 15000,
 });
 
-// axiosInstance.defaults.withCredentials = true;
+axiosInstance.defaults.withCredentials = true;
 
 // axiosInstance.interceptors.response.use(
 //   function (response) {
 //     return response;
 //   },
 //   function (error) {
-//     if (error.response.status === 401) {
-//       const authStore = useAuthStore();
-//       authStore.authenticated = false;
-//       router.push({name: 'forbidden'});
-//     }
+    // if (error.response.status === 401) {
+      // const authStore = useAuthStore();
+      // authStore.authenticated = false;
+      // router.push({name: 'forbidden'});
+    //   alert('401')
+    // }
 //     return Promise.reject(error);
 //   }
 // );
