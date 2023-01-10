@@ -3,15 +3,22 @@ import { Form } from 'vee-validate';
 import BaseInput from "@/components/inputs/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import FormBorder from "@/components/FormBorder.vue";
-import FacebookIcon from "@/components/icons/FacebookIcon.vue";
+import GoogleIcon from "@/components/icons/GoogleIcon.vue";
 import { ref } from 'vue';
 import axios from "@/config/axios/index.js";
+import { useRouter } from 'vue-router';
+import { useAuthStore } from "@/stores/AuthStore.js";
+
 
 
 export default {
   emits:['updateValues',  'visiblePassword'],
-  components:{BaseInput,BaseButton, Form, FormBorder, FacebookIcon},
+  components:{BaseInput,BaseButton, Form, FormBorder, GoogleIcon},
   setup() {
+
+   const router=useRouter()
+   const authStore=useAuthStore();
+
    
    const usernameValue=ref('')
    const passwordValue=ref('')
@@ -24,10 +31,12 @@ export default {
 
 
   async function onSubmit(){
-
     if((usernameValue.value.toLowerCase().match(emailRegex) || usernameValue.value.match(usernameRegex)) && passwordValue.value.match(passwordRegex)){
-     try{
-      await axios.post('login', {username: usernameValue.value, password: passwordValue.value,})
+      try{
+       const res= await axios.post('login', {username: usernameValue.value, password: passwordValue.value,})
+        authStore.user=res.data.user
+        authStore.authenticated=true
+        router.push({ name: 'home'})
      }catch(error){
          alert(error)
     }
@@ -62,7 +71,12 @@ function changePasswordType(){
    elem.setAttribute("type", "password")
  }
 }
-   return { onSubmit, inputValuesUpdate, registerButtonActivated, changePasswordType, passwordValueLength }
+
+function googleSignup(){
+  window.location.href=import.meta.env.VITE_API_BASE_URL+'auth/google/redirect';
+
+}
+   return { onSubmit, inputValuesUpdate, registerButtonActivated, changePasswordType, passwordValueLength, googleSignup }
   }
 }
 </script>
@@ -74,11 +88,11 @@ function changePasswordType(){
     <base-button type="submit" class="mt-[1.6rem]" :class="[!registerButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="!registerButtonActivated">Log in</base-button>
     <form-border class="mt-[1rem]"></form-border>
     <div class="flex flex-col items-center justify-center gap-[2rem]">
-      <div class="cursor-pointer flex items-center justify-center gap-[1rem]"> 
-        <facebook-icon color="#385185"></facebook-icon>
-        <p class="text-[#385185] text-[2.4rem] font-[500]">Log in with Facebook</p>
+      <div class="cursor-pointer flex items-center justify-center gap-[1rem]" @click="googleSignup"> 
+        <google-icon></google-icon>
+        <p class="text-[#385185] text-[2.4rem] font-[500]">Log in with Google</p>
       </div>
-      <router-link to="{ name: 'forgot-password'}" class="text-[rgba(0, 55, 107)] text-[1.8rem]">
+      <router-link :to="{ name: 'forgot-password'}" class="text-[rgba(0, 55, 107)] text-[1.8rem]">
        Forgot password?
       </router-link>
     </div>

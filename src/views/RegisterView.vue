@@ -3,7 +3,7 @@ import InstagramText from "@/components/icons/InstagramText.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import FormBorder from "@/components/FormBorder.vue";
 import BirthdayModal from "@/components/BirthdayModal.vue";
-import FacebookIcon from "@/components/icons/FacebookIcon.vue";
+import GoogleIcon from "@/components/icons/GoogleIcon.vue";
 import CakeIcon from "@/components/icons/CakeIcon.vue";
 import RegisterForm from '@/components/forms/RegisterForm.vue';
 import DateForm from '@/components/forms/DateForm.vue';
@@ -16,7 +16,7 @@ import { useRouter } from 'vue-router';
 
 export default {
   emits:['dateForm', 'hideModal', 'buttonDisability', 'resetButton', 'emailCode'],
-  components:{InstagramText, BaseButton, FacebookIcon, FormBorder, RegisterForm, CakeIcon, BirthdayModal, DateForm, Form},
+  components:{InstagramText, BaseButton, GoogleIcon, FormBorder, RegisterForm, CakeIcon, BirthdayModal, DateForm, Form},
   setup() {
     const registrationFormData = useRegisterStore();
     const router = useRouter();
@@ -103,6 +103,10 @@ function goBackToRegistration(){
   showDateForm.value=false
   registrationFormData.setFromDateToRegister(true)
 }
+function googleSignup(){
+  window.location.href=import.meta.env.VITE_API_BASE_URL+'auth/google/redirect';
+
+}
     return {
       showDateForm, 
       showBirthdayModal, 
@@ -120,7 +124,8 @@ function goBackToRegistration(){
       getCodeValue,
       codeFormButtonActivated,
       submitRegistration,
-      goBackToRegistration
+      goBackToRegistration,
+      googleSignup
        
     }
   },
@@ -134,9 +139,9 @@ function goBackToRegistration(){
   <div v-if="!showDateForm && showCredentialsForm" class="w-[100%] bg-[#ffffff90] pt-[7rem] pb-[4rem] px-[6rem] border-[1px] border-solid border-[#cdcdcd] rounded-[1px] flex flex-col items-center">
     <div class="scale-[0.7]"><instagram-text/></div>
     <p class="text-[3.2rem] text-[#7b7b7bb4] font-[500] text-center">Sign up to see photos and videos from your friends.</p>
-   <base-button type="button" class="mt-[3.6rem] flex items-center justify-center gap-[1rem]">
-   <facebook-icon color="#fff" class="self-end -translate-y-[1.2px]"></facebook-icon>
-   <p>Log in with Facebook</p>
+   <base-button @click="googleSignup" type="button" class="mt-[3.6rem] flex items-center justify-center gap-[1rem]">
+   <google-icon color="#fff" class="self-end -translate-y-[1.2px]"></google-icon>
+   <p>Log in with Google</p>
    </base-button>
    <form-border class="mt-[1.6rem]"></form-border>
     <register-form @date-form="showDateForm=true" class="pt-[3rem] w-[100%]"></register-form>
