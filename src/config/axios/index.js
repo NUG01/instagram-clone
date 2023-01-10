@@ -1,6 +1,7 @@
+import { useAuthStore } from "@/stores/AuthStore.js";
 import axios from "axios";
-// import { useAuthStore } from "@/stores/AuthStore.js";
-// import router from "@/router/index";
+
+// import { useRouter } from "vue-router";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -14,12 +15,11 @@ axiosInstance.defaults.withCredentials = true;
 //     return response;
 //   },
 //   function (error) {
-    // if (error.response.status === 401) {
-      // const authStore = useAuthStore();
-      // authStore.authenticated = false;
-      // router.push({name: 'forbidden'});
-    //   alert('401')
-    // }
+//     if (error.response.status === 401) {
+//       const authStore = useAuthStore();
+//       authStore.authenticated=false;
+//       router.push({name: 'landing'});
+//     }
 //     return Promise.reject(error);
 //   }
 // );

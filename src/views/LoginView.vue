@@ -2,12 +2,11 @@
 import InstagramText from "@/components/icons/InstagramText.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import FormBorder from "@/components/FormBorder.vue";
-import FacebookIcon from "@/components/icons/FacebookIcon.vue";
 import LoginForm from '@/components/forms/LoginForm.vue';
 
 
 export default {
-  components:{InstagramText, BaseButton, FacebookIcon, FormBorder, LoginForm},
+  components:{InstagramText, BaseButton, FormBorder, LoginForm},
   setup() {
     
   },
