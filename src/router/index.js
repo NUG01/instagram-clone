@@ -3,7 +3,9 @@ import LandingView from "@/views/LandingView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import LoginView from "@/views/LoginView.vue";
 import HomeView from "@/views/HomeView.vue";
-import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
+import PasswordForgotView from "@/views/PasswordForgotView.vue";
+import PasswordRecoverView from "@/views/PasswordRecoverView.vue";
+import EasyLoginView from "@/views/EasyLoginView.vue";
 import OAuthView from "@/views/OAuthView.vue";
 import { isAuthenticated, isLoggedIn } from "@/router/guards.js";
 
@@ -32,9 +34,23 @@ const router = createRouter({
     {
       path: "/forgot-password",
       name: "forgot-password",
-      component: ForgotPasswordView,
+      component: PasswordForgotView,
       beforeEnter: [isLoggedIn],
     },
+    { 
+      path: '/recover-password/:id',
+      name: 'recover-password', 
+      component: PasswordRecoverView,
+      props:true,
+      beforeEnter: [isLoggedIn],
+  },
+    { 
+      path: '/easy-login/:id',
+      name: 'easy-login', 
+      component: EasyLoginView,
+      props:true,
+      beforeEnter: [isLoggedIn],
+  },
     {
       path: "/home",
       name: "home",

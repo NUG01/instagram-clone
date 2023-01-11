@@ -4,7 +4,7 @@ import { ref, watch, computed } from 'vue';
 import { useRegisterStore } from '@/stores/RegistrationStore.js';
 
 export default {
-  props:['name', 'label', 'success', 'error', 'type', 'passwordIsFilled'],
+  props:['name', 'label', 'success', 'error', 'type', 'passwordIsFilled', 'width'],
   components:{Field},
   setup(props, context) {
     const registrationFormData = useRegisterStore();
@@ -12,12 +12,12 @@ export default {
      const inputName=props.name
      const label=props.label
      const type=props.type
+     const width=props.width
      const passwordVisibilityState=ref('Show')
      let model;
 
      if(props.name=='fullname'){
       model=ref(registrationFormData.getFullname)
-      // element.dispatchEvent(new Event('input', {bubbles:true}));
      }
      else if(props.name=='email'){
        model=ref(registrationFormData.getEmail)
@@ -74,7 +74,8 @@ export default {
       type, 
       changePasswordType,
       passwordVisibilityState,
-      passwordValueIsFilled
+      passwordValueIsFilled,
+      width
       }
   },
 }
@@ -82,7 +83,7 @@ export default {
 
 
 <template>
-<div class="w-[90%] relative">
+<div class="relative" :class="[width ? width : 'w-[90%]']">
   <label :for="inputName" :class="[model ? 'shrinkLabel' : '']" class="text-[#a7a7a7] text-[2.4rem] absolute top-1/2 left-0 translate-x-[1.6rem] -translate-y-1/2 pointer-events-none	">{{ label }}</label>
   <input v-model="model" :type="type" :name="inputName" :id="inputName" @input="getValue(inputName)" class="w-[100%] h-[6.3rem] text-[2.4rem] text-[#636363] border-[#cdcdcd] focus:border-[#a7a7a7] focus:border-[1.5px] border-[1px] border-solid rounded-[3px] bg-[#f6f7f7c1] pl-[1.6rem]" :class="[type ? 'pr-[12rem]' : 'pr-[5rem]']" />
   <div class="absolute top-0 right-0" :class="[type ? '-translate-x-[12%] flex items-center justify-center gap-[0.5rem] translate-y-[25%]' : '-translate-x-1/2 translate-y-1/2']">
