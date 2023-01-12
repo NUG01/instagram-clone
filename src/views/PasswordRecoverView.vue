@@ -48,7 +48,11 @@ export default {
 
       }
     }
-    return {inputValuesUpdate, onSubmit, resetButtonActivated}
+    return {
+       inputValuesUpdate,
+       onSubmit, 
+       resetButtonActivated,
+       }
   },
 }
 </script>
