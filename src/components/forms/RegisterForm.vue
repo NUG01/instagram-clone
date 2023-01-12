@@ -48,7 +48,6 @@ export default {
          email: emailValue.value, 
       })
     if(emailValue.value.toLowerCase().match(emailRegex) && fullnameValue.value.match(fullnameRegex) && usernameValue.value.match(usernameRegex) && passwordValue.value.match(passwordRegex)){
-      console.log('look2')
       context.emit('dateForm')
       registrationFormData.setEmail(emailValue.value)
       registrationFormData.setUsername(usernameValue.value)
