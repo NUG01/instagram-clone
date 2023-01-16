@@ -12,11 +12,12 @@ import { useRegisterStore } from '@/stores/RegistrationStore.js';
 import axios from "@/config/axios/index.js";
 import { Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
+import ButtonSpinner from "@/components/ButtonSpinner.vue";
 
 
 export default {
-  emits:['dateForm', 'hideModal', 'buttonDisability', 'resetButton', 'emailCode'],
-  components:{InstagramText, BaseButton, GoogleIcon, FormBorder, RegisterForm, CakeIcon, BirthdayModal, DateForm, Form},
+  emits:['dateForm', 'hideModal', 'buttonDisability', 'resetButton', 'emailCode', 'loadingStop'],
+  components:{InstagramText, BaseButton, GoogleIcon, FormBorder, RegisterForm, CakeIcon, BirthdayModal, DateForm, Form, ButtonSpinner},
   setup() {
     const registrationFormData = useRegisterStore();
     const router = useRouter();
@@ -29,12 +30,16 @@ export default {
     const credentialsError=ref(true)
     const error=ref('')
     const dateError=ref(false)
+    const dateSubmitPressed=ref(false)
+    const submitPressed=ref(false)
+
 
     const codeRegex=/^[0-9_]{6,6}$/
     const codeFormButtonActivated=ref(false)
 
 
     function submitDateForm(){
+      dateSubmitPressed.value=true
      submitDate.value=true
     }
     function changeButtonState(state){
@@ -58,6 +63,7 @@ export default {
       showCredentialsForm.value=false
     }
    async function submitRegistration(){
+        submitPressed.value=true
         credentialsError.value=false
         error.value=''
     try{
@@ -77,8 +83,10 @@ export default {
         registrationFormData.setYear(null)
         registrationFormData.setCode(null)
         registrationFormData.setFromDateToRegister(false)
-        router.push({ name : 'home' })
+        submitPressed.value=false
+        router.push({ name : 'login' })
         }catch(err){
+        submitPressed.value=false
         credentialsError.value=true
       if(err.response.data.message){
         error.value=err.response.data.message
@@ -125,7 +133,8 @@ function googleSignup(){
       codeFormButtonActivated,
       submitRegistration,
       goBackToRegistration,
-      googleSignup
+      googleSignup,
+      dateSubmitPressed
        
     }
   },
@@ -153,11 +162,14 @@ function googleSignup(){
     <p class="text-[2rem] text-[#0094f6b4] font-[500] text-center cursor-pointer" @click="showBirthdayModal=true">Why do I need to provied my birthday?</p>
     <div class="mt-[1.3rem]">
       <code-form></code-form>
-      <date-form :submit="submitDate" @email-code="verifyEmailCode" @button-disability="changeButtonState" @reset-button="submitDate=false"></date-form>
+      <date-form :submit="submitDate" @loading-stop="dateSubmitPressed=false" @email-code="verifyEmailCode" @button-disability="changeButtonState" @reset-button="submitDate=false"></date-form>
       <p v-show="dateError" class="text-[1.6rem] text-[#4a4a4ab4] font-[400] text-center mt-[1rem]">You need to enter the date you were born</p>
       <p class="text-[1.6rem] text-[#4a4a4ab4] font-[400] text-center mt-[2rem]">Use your own birthday, even if this account is for a business, a pet, or something else</p>
       <div v-if="credentialsError" class="text-[#FA383E] text-[1.8rem] text-center mt-[3rem]">{{ error }}</div>
-      <base-button @click="submitDateForm" type="button" width="w-[100%]" :class="[!nextButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '', credentialsError ? 'mt-[1rem]' : 'mt-[3rem]']" :disabled="!nextButtonActivated">Next</base-button>
+      <base-button @click="submitDateForm" type="button" width="w-[100%] h-[5rem]" :class="[!nextButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '', credentialsError ? 'mt-[1rem]' : 'mt-[3rem]']" :disabled="!nextButtonActivated">
+      <p v-if="!dateSubmitPressed">Next</p>      
+      <button-spinner v-else></button-spinner>
+      </base-button>
       <p class="text-[2.4rem] font-[500] text-center mt-[2rem] text-[#47afff] cursor-pointer" @click="goBackToRegistration">Go Back</p>
     </div>
   </div>
@@ -167,7 +179,10 @@ function googleSignup(){
     <p class="text-[2rem] text-[#000000b4] font-[500] text-center mt-[1rem] mb-[2.7rem]">Enter the confirmation code we sent to {{ registrationFormData.getEmail }}. <button @click="resendCode"><p class="text-[#47afff] font-[600]">Resend Code.</p></button></p>
     <Form @submit="submitRegistration" class="mt-[1.3rem] w-[100%]">
      <input name="code" id="code" @input="getCodeValue($event)" class="w-[100%] h-[6.3rem] mb-[2.4rem] text-[2.4rem] text-[#636363] border-[#cdcdcd] focus:border-[#a7a7a7] focus:border-[1.5px] border-[1px] border-solid rounded-[10px] bg-[#f6f7f7c1] pl-[1.6rem] pr-[5rem]']" placeholder="Confirmation Code" />
-      <base-button type="submit" width="w-[100%]" rounded="rounded-[12px]" :class="[!codeFormButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="!codeFormButtonActivated">Next</base-button>
+      <base-button type="submit" width="w-[100%] h-[5rem]" rounded="rounded-[12px]" :class="[!codeFormButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="!codeFormButtonActivated">
+      <p v-if="!submitPressed">Next</p>
+      <button-spinner v-else></button-spinner>
+      </base-button>
       <p class="text-[2.4rem] font-[500] text-center mt-[2rem] text-[#47afff] cursor-pointer" @click="showCredentialsForm=true">Go Back</p>
     </Form>
   </div>

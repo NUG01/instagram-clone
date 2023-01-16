@@ -14,7 +14,7 @@ export async function isAuthenticated() {
     }
   
   if (authStore.getAuthenticated==false) {
-    return "/";
+    return "/403-forbidden";
   }
 }
 
