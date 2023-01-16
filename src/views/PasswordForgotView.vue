@@ -7,10 +7,12 @@ import InstagramText from "@/components/icons/InstagramText.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import FormBorder from "@/components/FormBorder.vue";
 import axios from "@/config/axios/index.js";
+import ButtonSpinner from "@/components/ButtonSpinner.vue";
+
 
 
 export default {
-  components:{Form, SecurityIcon, BaseButton, FormBorder, InstagramText},
+  components:{Form, SecurityIcon, BaseButton, FormBorder, InstagramText, ButtonSpinner},
   setup() {
     const router=useRouter()
 
@@ -18,6 +20,7 @@ export default {
     const emailOrUsername=ref('')
     const emailSent=ref(false)
     const credentialsError=ref(false)
+    const emailSubmitted=ref(false)
     const error=ref('')
     const userEmail=ref('')
     const hiddenEmail=ref('');
@@ -50,6 +53,7 @@ export default {
     credentialsError.value=false
     error.value=''
     try{
+      emailSubmitted.value=true
       const res= await axios.post('forgot-password', {
         emailOrUsername: emailOrUsername.value
       })
@@ -59,9 +63,11 @@ export default {
 
       hiddenEmail.value=  emailName.charAt(0) + populateSymbol('*', emailName.length-1) + emailName.charAt(emailName.length-1) + emailIndex;
       emailSent.value=true
+      emailSubmitted.value=false
      }catch(err){
-      error.value=err.response.data
-      credentialsError.value=true
+       error.value=err.response.data
+       credentialsError.value=true
+       emailSubmitted.value=false
     }
     }
 
@@ -74,7 +80,8 @@ export default {
       emailSent,
       credentialsError,
       error,
-      hiddenEmail
+      hiddenEmail,
+      emailSubmitted
       }
   },
 }
@@ -92,7 +99,10 @@ export default {
     <p class="text-[2rem] text-[#7b7b7bb4] font-[500] text-center mt-[1rem] mb-[1rem]">Enter your email or username and we'll send you a link to get back into your account.</p>
     <Form @submit="submitPasswordReset" class="mt-[1.3rem] w-[100%]">
      <input name="reset" id="reset" @input="getCodeValue($event)" class="w-[100%] h-[6.3rem] mb-[2.4rem] text-[2.4rem] text-[#636363] border-[#cdcdcd] focus:border-[#a7a7a7] focus:border-[1.5px] border-[1px] border-solid rounded-[10px] bg-[#f6f7f7c1] pl-[1.6rem] pr-[5rem]']" placeholder="Email or Username" />
-      <base-button type="submit" width="w-[100%]" rounded="rounded-[12px]" :class="[!codeFormButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="!codeFormButtonActivated">Send login link</base-button>
+      <base-button type="submit" width="w-[100%] h-[5rem]" rounded="rounded-[12px]" :class="[!codeFormButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="!codeFormButtonActivated">
+      <p v-if="!emailSubmitted">Send login link</p>
+      <button-spinner v-else></button-spinner>
+      </base-button>
     </Form>
     <form-border class="mt-[3rem]" width="w-[100%]"></form-border>
     <router-link :to="{name: 'registration'}" class="text-[2.2rem] text-[#000000b4] hover:text-[#4a4a4ab4] font-[500] text-center mt-[1rem] mb-[10rem]" :class="[credentialsError ? 'mb-[2rem]' : 'mb-[10rem]']">Create new account</router-link>

@@ -3,6 +3,8 @@ import LandingView from "@/views/LandingView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import LoginView from "@/views/LoginView.vue";
 import HomeView from "@/views/HomeView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
+import ForbiddenView from "@/views/ForbiddenView.vue";
 import PasswordForgotView from "@/views/PasswordForgotView.vue";
 import PasswordRecoverView from "@/views/PasswordRecoverView.vue";
 import EasyLoginView from "@/views/EasyLoginView.vue";
@@ -61,6 +63,17 @@ const router = createRouter({
       path: '/oauth', 
       name: 'oauth', 
       component: OAuthView,
+  },
+  { 
+    path: '/403-forbidden', 
+    name: 'forbidden', 
+    component: ForbiddenView,
+    beforeEnter: [isLoggedIn],
+  },
+  { 
+    path: '/:notFound(.*)', 
+    name: 'not-found', 
+    component: NotFoundView,
   },
   ],
 });

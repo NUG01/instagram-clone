@@ -168,7 +168,7 @@ function changePasswordType(){
       <template v-slot:error><error-icon></error-icon></template>
     </base-input>
     <base-button type="submit" class="mt-[1.6rem]" :class="[!registerButtonActivated ? 'opacity-[0.63] hover:bg-[#0095f6]' : '']" :disabled="!registerButtonActivated">Sign up</base-button>
-    <div v-if="credentialsError" class="text-[#FA383E] text-[1.8rem] text-center">{{ error }}</div>
+    <div v-if="credentialsError" class="text-[#FA383E] text-[2.4rem] text-center">{{ error }}</div>
   </Form>
 </template>
 

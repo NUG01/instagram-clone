@@ -5,6 +5,8 @@ import { useRegisterStore } from '@/stores/RegistrationStore.js';
 import axios from "@/config/axios/index.js";
 
 
+
+
 export default {
   props:['submit'],
   components:{Form},
@@ -70,8 +72,10 @@ export default {
         email: registrationFormData.getEmail,
         })
         context.emit('emailCode')
+        context.emit('loadingStop')
      }catch(err){
-     alert(err)
+       context.emit('loadingStop')
+       alert(err)
     }
     }
     function verifyYear(){

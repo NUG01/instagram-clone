@@ -115,7 +115,7 @@ function googleSignup(){
         <google-icon></google-icon>
         <p class="text-[#385185] text-[2.4rem] font-[500]">Log in with Google</p>
       </div>
-     <div v-if="credentialsError" class="text-[#FA383E] text-[1.8rem] text-center">{{ error }}</div>
+     <div v-if="credentialsError" class="text-[#FA383E] text-[2.4rem] text-center">{{ error }}</div>
       <router-link :to="{ name: 'forgot-password'}" class="text-[rgba(0, 55, 107)] text-[1.8rem]">
        Forgot password?
       </router-link>
