@@ -3,6 +3,9 @@ import LandingView from "@/views/LandingView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import LoginView from "@/views/LoginView.vue";
 import HomeView from "@/views/HomeView.vue";
+import ProfileView from "@/views/ProfileView.vue";
+import ExploreView from "@/views/ExploreView.vue";
+import MessagesView from "@/views/MessagesView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import ForbiddenView from "@/views/ForbiddenView.vue";
 import PasswordForgotView from "@/views/PasswordForgotView.vue";
@@ -57,6 +60,25 @@ const router = createRouter({
       path: "/home",
       name: "home",
       component: HomeView,
+      beforeEnter: [isAuthenticated],
+    },
+    {
+      path: "/explore/",
+      name: "explore",
+      component: ExploreView,
+      beforeEnter: [isAuthenticated],
+    },
+    {
+      path: "/direct/inbox/",
+      name: "messages",
+      component: MessagesView,
+      beforeEnter: [isAuthenticated],
+    },
+    {
+      path: "/:id/",
+      name: "profile",
+      component: ProfileView,
+      props:true,
       beforeEnter: [isAuthenticated],
     },
     { 

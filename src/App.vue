@@ -22,6 +22,7 @@ export default {
         dataIsFetched.value=true
     })
 
+
     return { dataIsFetched }
   },
 }

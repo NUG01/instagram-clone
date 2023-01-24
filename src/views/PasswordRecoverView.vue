@@ -28,7 +28,7 @@ export default {
        email: router.currentRoute.value.query.email,
        password: password.value
       })
-       router.push({ name: 'home' })
+       router.push({ name: 'login' })
     }catch(err){
        alert(err)
     }
