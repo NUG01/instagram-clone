@@ -1,11 +1,14 @@
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import axios from "@/config/axios/index.js";
 import { useAuthStore } from "@/stores/AuthStore.js";
+import { useFunctionalityStore } from "@/stores/FunctionalityStore.js";
 
 export default {
   setup() {
     const authStore=useAuthStore();
+    const functionality=useFunctionalityStore()
+
     const dataIsFetched=ref(false)
     onMounted(async()=>{
       if(authStore.getUser==null){
@@ -22,16 +25,32 @@ export default {
         dataIsFetched.value=true
     })
 
+    if(localStorage.getItem('darkTheme')){
+      functionality.darkTheme=localStorage.getItem('darkTheme')
+    }
 
-    return { dataIsFetched }
+    const themeColor = computed(() => {
+     return functionality.getDarkTheme ? 'dark-theme' : 'light-theme';
+   })
+
+
+    return { dataIsFetched, themeColor }
   },
 }
 </script>
 
 <template>
-<router-view v-if="dataIsFetched"></router-view>
+<router-view v-if="dataIsFetched" :class="themeColor"></router-view>
 </template>
 
 <style scoped>
 
+.light-theme{
+  color:rgb(27, 27, 27);
+  background-color: rgba(250,250,250);
+}
+.dark-theme{
+  color:rgba(250,250,250);
+  background-color: rgb(27, 27, 27);
+}
 </style>

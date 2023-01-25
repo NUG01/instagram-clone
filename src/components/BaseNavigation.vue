@@ -4,10 +4,11 @@ import MoreModal from "@/components/MoreModal.vue";
 import SettingItem from "@/components/SettingItem.vue";
 import InstagramSvg from "@/components/icons/InstagramSvg.vue";
 import {useRouter} from "vue-router";
-import {computed, ref} from "vue";
+import {computed, ref, onMounted} from "vue";
 import { useNavigationStore } from "@/stores/NavigationStore.js";
 import { useAuthStore } from "@/stores/AuthStore.js";
-import VueClickAway from "vue3-click-away";
+import { useFunctionalityStore } from "@/stores/FunctionalityStore.js";
+import axios from "@/config/axios/index.js";
 
 
 
@@ -18,8 +19,26 @@ export default {
     const router=useRouter();
     const navigation=useNavigationStore()
     const authStore=useAuthStore()
+    const functionality=useFunctionalityStore()
+    let user=null;
 
-    const username=authStore.getUser.username
+
+    const dataIsFetched=ref(false)
+
+    onMounted(async()=>{
+      if(authStore.getUser!=null){
+        return
+      }else{
+        const res=await axios.get('user')
+        authStore.user=res.data.user;
+        if(authStore.getUser!=null){
+            authStore.authenticated = true;
+             user=authStore.getUser
+           }else{
+             authStore.authenticated = false;
+           }
+        }
+    })
 
     const moreBar=ref(false)
     const moreBarActive=ref(false)
@@ -53,7 +72,8 @@ export default {
     function pushProile(){
       navigation.navigate()
       navigation.profilePage=true
-      router.push(`/${username}/`)
+      console.log(authStore.getUser.username)
+      router.push(`/${user.username}/`)
     }
 
     function pushSearch(){
@@ -87,7 +107,6 @@ export default {
        window.addEventListener("click", function(ev){
          if(ev.path[0]==document.querySelector('.more-parent') || ev.path[0]==document.querySelector('.more-icon') || ev.path[0]==document.querySelector('.more-text')){
            if(moreBar.value==true){
-            console.log(ev.path[0])
             moreBar.value=false
             moreBarActive.value=false
             return
@@ -98,15 +117,17 @@ export default {
            moreBarActive.value=false
          }
           if(ev.path[0]==document.querySelector('.more-parent') || ev.path[0]==document.querySelector('.more-text') || ev.path[0]==document.querySelector('.more-icon')){
-          if(moreBar.value==true){
+            if(moreBar.value==true){
             moreBar.value=false
             moreBarActive.value=false
             return;
           }
-          moreBar.value=!moreBar.value
-           moreBarActive.value=!moreBarActive.value
+            moreBar.value=!moreBar.value
+             moreBarActive.value=!moreBarActive.value
          }
          });
+
+            dataIsFetched.value=true
 
 
 return {
@@ -125,6 +146,9 @@ return {
   navigateToHome,
   moreBar,
   moreBarActive,
+  dataIsFetched,
+  functionality,
+  authStore
 }
   },
 }
@@ -132,7 +156,7 @@ return {
 
 
 <template>
-<section class="w-[30rem] h-[100vh] border-r border-r-solid border-r-[#cdcdcd]">
+<section v-if="dataIsFetched" class="w-[30rem] h-[100vh] border-r border-r-solid" :class="[functionality.getDarkTheme ? 'border-r-[#919191]' : 'border-r-[#cdcdcd]']">
 <div class="w-[100%] flex items-center justify-start pt-[4rem] px-[2rem]">
   <div class="w-[12rem] cursor-pointer">
     <instagram-svg @click="navigateToHome"></instagram-svg>
