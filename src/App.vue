@@ -1,17 +1,23 @@
 <script>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import axios from "@/config/axios/index.js";
 import { useAuthStore } from "@/stores/AuthStore.js";
 import { useFunctionalityStore } from "@/stores/FunctionalityStore.js";
+import ReportProblem from "@/components/ReportProblem.vue";
 
 export default {
+  components:{ReportProblem},
   setup() {
     const authStore=useAuthStore();
     const functionality=useFunctionalityStore()
 
     const dataIsFetched=ref(false)
+
+
     onMounted(async()=>{
-      if(authStore.getUser==null){
+     
+      functionality.darkTheme=!localStorage.getItem('darkTheme')
+      if(authStore.getUser==null){ 
         const res=await axios.get('user')
           authStore.user=res.data.user;
           if(authStore.getUser!=null){
@@ -25,22 +31,28 @@ export default {
         dataIsFetched.value=true
     })
 
-    if(localStorage.getItem('darkTheme')){
-      functionality.darkTheme=localStorage.getItem('darkTheme')
-    }
+    const problemReportActivated = computed(() => {
+     return functionality.getReportProblem;
+   })
 
+      
     const themeColor = computed(() => {
-     return functionality.getDarkTheme ? 'dark-theme' : 'light-theme';
+     return functionality.darkTheme ? 'dark-theme' : 'light-theme';
    })
 
 
-    return { dataIsFetched, themeColor }
+
+
+    return { dataIsFetched, themeColor, problemReportActivated }
   },
 }
 </script>
 
 <template>
-<router-view v-if="dataIsFetched" :class="themeColor"></router-view>
+  <main :class="themeColor" id="main">
+   <div v-if="problemReportActivated && dataIsFetched" class="z-50"><report-problem></report-problem></div>
+   <router-view v-if="dataIsFetched"></router-view>
+  </main>
 </template>
 
 <style scoped>

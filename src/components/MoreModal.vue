@@ -2,11 +2,18 @@
 import SettingItem from "@/components/SettingItem.vue";
 import { useFunctionalityStore } from "@/stores/FunctionalityStore.js";
 import { computed } from "vue";
+import { useAuthStore } from "@/stores/AuthStore.js";
+import axios from "@/config/axios/index.js";
+import { useRouter } from "vue-router";
+
 
 export default {
   components:{SettingItem},
   setup() {
        const functionality=useFunctionalityStore()
+       const authStore=useAuthStore();
+       const router=useRouter();
+
 
        function changeTheme(){
          functionality.darkTheme=!functionality.darkTheme
@@ -19,9 +26,27 @@ export default {
      return functionality.getDarkTheme ? 'dark-theme' : 'light-theme';
    })
 
+    async function logoutHandle(){
+     try{
+       await axios.post('logout')
+       authStore.user=null
+       authStore.authenticated=false
+       functionality.darkTheme=false
+       localStorage.removeItem('darkTheme')
+       router.push({ name: 'landing' })
+     }catch(err){
+      alert('Something went wrong')
+     } 
+    }
+
+    function reportProblem(){
+      functionality.reportProblem=true
+    }
+
+
     
     
-    return {changeTheme, themeColor}
+    return {changeTheme, themeColor, logoutHandle, reportProblem}
   },
 }
 </script>
@@ -49,12 +74,14 @@ export default {
            </template>
         </setting-item>
         </div>
+        <div @click="reportProblem">
         <setting-item>
            <template v-slot:function>Report a problem
            </template>
            <template v-slot:icon>Ic
            </template>
         </setting-item>
+        </div>
       </div>
       <div :class="themeColor" class="flex flex-col rounded-[7px] overflow-hidden">
         <setting-item>
@@ -63,12 +90,14 @@ export default {
            <template v-slot:icon>Ic
            </template>
         </setting-item>
+        <div @click="logoutHandle">
         <setting-item>
            <template v-slot:function>Log out
            </template>
            <template v-slot:icon>Ic
            </template>
         </setting-item>
+        </div>
       </div>
 </div>
 </template>

@@ -20,20 +20,16 @@ export default {
     const navigation=useNavigationStore()
     const authStore=useAuthStore()
     const functionality=useFunctionalityStore()
-    let user=null;
 
 
     const dataIsFetched=ref(false)
 
     onMounted(async()=>{
-      if(authStore.getUser!=null){
-        return
-      }else{
+      if(!authStore.getUser){
         const res=await axios.get('user')
         authStore.user=res.data.user;
         if(authStore.getUser!=null){
             authStore.authenticated = true;
-             user=authStore.getUser
            }else{
              authStore.authenticated = false;
            }
@@ -72,8 +68,7 @@ export default {
     function pushProile(){
       navigation.navigate()
       navigation.profilePage=true
-      console.log(authStore.getUser.username)
-      router.push(`/${user.username}/`)
+      router.push(`/${authStore.getUser.username}/`)
     }
 
     function pushSearch(){
