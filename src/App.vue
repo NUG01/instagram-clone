@@ -59,7 +59,7 @@ export default {
 
 .light-theme{
   color:rgb(27, 27, 27);
-  background-color: rgba(250,250,250);
+  background-color: rgb(250, 250, 250);
 }
 .dark-theme{
   color:rgba(250,250,250);
