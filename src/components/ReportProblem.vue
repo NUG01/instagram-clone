@@ -12,6 +12,7 @@ export default {
   setup() {
         const functionality=useFunctionalityStore()
         const reportButtonActivated=ref(false)
+        const isFileTooBig=ref(false)
         const problem=ref('')
         const selectedFile=ref([])
         const imageDisplay=ref([])
@@ -28,23 +29,50 @@ export default {
        function handleImageChange(ev){
          imageUpload(ev,selectedFile, imageDisplay);
       }
+      
+       function deleteImage(index){
+         imageDisplay.value = imageDisplay.value.filter(function(item) {
+             return item !== imageDisplay.value[index]
+           })
+      }
+
+
+       function hideDelete(ev){
+        ev.target.lastChild.classList.remove('block')
+        ev.target.lastChild.classList.add('hidden')
+      }
+       function showDelete(ev){
+         ev.target.nextElementSibling.classList.remove('hidden')
+        ev.target.nextElementSibling.classList.add('block')
+
+      }
+      
 
 
    function reportHandle(){
-      // const form=new FormData();
-      // form.append('text', problem.value);
-      // form.append('images', selectedFile.value);
-      console.log(imageDisplay.value)
-     try{
-       axios.post('report-problem',{
-        text: problem.value,
-        images: imageDisplay.value,
-       })
-     }catch(err){
-      alert('Something went wrong')
-     }
+     isFileTooBig.value=false
+     axios.post('report-problem',{
+       text: problem.value,
+       images: imageDisplay.value,
+      }).catch((err)=>{
+        if(err.response.status==413){
+          isFileTooBig.value=true
+        }
+
+      })
    }
-    return {functionality, reportHandle, problem, reportButtonActivated, handleImageChange, imageDisplay}
+    return {
+            functionality,
+            reportHandle, 
+            problem,
+            reportButtonActivated,
+            handleImageChange, 
+            imageDisplay, 
+            isFileTooBig,
+            showDelete,
+            hideDelete,
+            deleteImage,
+       }
   },
 }
 </script>
@@ -58,9 +86,15 @@ export default {
 <div class="p-[2rem] w-[100%]">
   <Form @submit="reportHandle" class="rounded-[2px]">
     <textarea v-model="problem" :class="[functionality.getDarkTheme ? 'border-[#545454]' : 'border-[#cdcdcd]']" class="w-[100%] bg-inherit max-h-[25rem] min-h-[25rem] mb-[2rem] border border-solid p-[1rem]" style="resize: none;" placeholder="Briefly explain what happend." />
-  <div v-if="imageDisplay.length>0" class="mb-[5rem] mt-[3rem] three-column-grid">
-    <img v-for="file in imageDisplay" :key="file" :src="file" class="w-[100%] h-[12rem] rounded-[1px]"/>
+  <div v-if="imageDisplay.length>0" :class="[isFileTooBig ? 'mb-[1rem]' : 'mb-[5rem]']" class="mt-[3rem] three-column-grid">
+    <div @mouseover="showDelete($event)" @mouseleave="hideDelete($event)" v-for="(file, index) in imageDisplay" :key="index" class="w-[100%] h-[12rem] rounded-[1px] relative cursor-pointer">
+      <img :src="file" class="w-[100%] h-[12rem]"/>
+      <div @click="deleteImage(index)" :id="index" v-if="showDelete" class="w-[100%] h-[12rem] scale-[1.1] bg-gray-500 opacity-[0.7] absolute top-0 left-0 rounded-[1px] hidden">
+        <close-icon fill="#efefef" class="scale-[1.5] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></close-icon>
+      </div>
+      </div>
   </div>
+  <div v-if="isFileTooBig" class="text-[2rem] text-red-700 mb-[2rem] cursor-pointer">File size is too big, please upload fewer photos.</div>
   
   <div class="flex items-center justify-between">
    <button :disabled="!reportButtonActivated" type="submit" :class="[!reportButtonActivated ? 'pointer-events-none opacity-[0.7]' : '']" class="py-[1rem] px-[1.5rem] flex items-center justify-center bg-[#0095f6] text-[#fff] text-[2.4rem] font-[500] hover:bg-[#0074cc] rounded-[10px]"><p>Send report</p></button>
@@ -79,7 +113,7 @@ export default {
 
 <style scoped>
 .color{
-  color:#dedede;
+  color:#efefef;
 }
 @keyframes animation {
   from {
