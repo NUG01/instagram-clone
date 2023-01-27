@@ -21,6 +21,13 @@ export default {
 
        }
 
+       function pushSaved(){
+        router.push({name: 'saved-items', params: { username: authStore.getUser.username }})
+       }
+       function pushSettings(){
+        router.push({name: 'settings'})
+       }
+
 
        const themeColor = computed(() => {
      return functionality.getDarkTheme ? 'dark-theme' : 'light-theme';
@@ -46,7 +53,7 @@ export default {
 
     
     
-    return {changeTheme, themeColor, logoutHandle, reportProblem}
+    return {changeTheme, themeColor, logoutHandle, reportProblem, pushSaved, pushSettings}
   },
 }
 </script>
@@ -54,18 +61,22 @@ export default {
 <template>
 <div class="absolute bottom-full left-0 w-[105%] moreBarModal flex flex-col justiy-center gap-[1.2rem] z-30">
 <div :class="themeColor" class="flex flex-col rounded-[7px] overflow-hidden">
+       <div @click="pushSettings">
         <setting-item>
            <template v-slot:function>Settings
            </template>
            <template v-slot:icon>Ic
            </template>
         </setting-item>
+       </div>
+        <div @click="pushSaved">
          <setting-item>
            <template v-slot:function>Saved
            </template>
            <template v-slot:icon>Ic
            </template>
         </setting-item>
+        </div>
         <div @click="changeTheme">
         <setting-item>
            <template v-slot:function>Switch appearance

@@ -6,6 +6,8 @@ import HomeView from "@/views/userViews/HomeView.vue";
 import ProfileView from "@/views/userViews/ProfileView.vue";
 import ExploreView from "@/views/userViews/ExploreView.vue";
 import MessagesView from "@/views/userViews/MessagesView.vue";
+import SettingsView from "@/views/userViews/SettingsView.vue";
+import SavedView from "@/views/userViews/SavedView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import ForbiddenView from "@/views/guestViews/ForbiddenView.vue";
 import PasswordForgotView from "@/views/guestViews/PasswordForgotView.vue";
@@ -72,6 +74,24 @@ const router = createRouter({
       path: "/direct/inbox/",
       name: "messages",
       component: MessagesView,
+      beforeEnter: [isAuthenticated],
+    },
+    {
+      path: "/acounts/edit/",
+      name: "settings",
+      component: SettingsView,
+      beforeEnter: [isAuthenticated],
+    },
+    {
+      path: "/direct/inbox/",
+      name: "messages",
+      component: MessagesView,
+      beforeEnter: [isAuthenticated],
+    },
+    {
+      path: "/:username/saved/",
+      name: "saved-items",
+      component: SavedView,
       beforeEnter: [isAuthenticated],
     },
     {
