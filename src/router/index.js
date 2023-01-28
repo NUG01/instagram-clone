@@ -1,17 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import LandingView from "@/views/LandingView.vue";
-import RegisterView from "@/views/RegisterView.vue";
-import LoginView from "@/views/LoginView.vue";
-import HomeView from "@/views/HomeView.vue";
-import ProfileView from "@/views/ProfileView.vue";
-import ExploreView from "@/views/ExploreView.vue";
-import MessagesView from "@/views/MessagesView.vue";
+import LandingView from "@/views/guestViews/LandingView.vue";
+import RegisterView from "@/views/guestViews/RegisterView.vue";
+import LoginView from "@/views/guestViews/LoginView.vue";
+import HomeView from "@/views/userViews/HomeView.vue";
+import ProfileView from "@/views/userViews/ProfileView.vue";
+import ExploreView from "@/views/userViews/ExploreView.vue";
+import MessagesView from "@/views/userViews/MessagesView.vue";
+import SettingsView from "@/views/userViews/SettingsView.vue";
+import SavedView from "@/views/userViews/SavedView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
-import ForbiddenView from "@/views/ForbiddenView.vue";
-import PasswordForgotView from "@/views/PasswordForgotView.vue";
-import PasswordRecoverView from "@/views/PasswordRecoverView.vue";
-import EasyLoginView from "@/views/EasyLoginView.vue";
-import OAuthView from "@/views/OAuthView.vue";
+import ForbiddenView from "@/views/guestViews/ForbiddenView.vue";
+import PasswordForgotView from "@/views/guestViews/PasswordForgotView.vue";
+import PasswordRecoverView from "@/views/guestViews/PasswordRecoverView.vue";
+import EasyLoginView from "@/views/guestViews/EasyLoginView.vue";
+import OAuthView from "@/views/guestViews/OAuthView.vue";
 import { isAuthenticated, isLoggedIn } from "@/router/guards.js";
 
 
@@ -72,6 +74,24 @@ const router = createRouter({
       path: "/direct/inbox/",
       name: "messages",
       component: MessagesView,
+      beforeEnter: [isAuthenticated],
+    },
+    {
+      path: "/acounts/edit/",
+      name: "settings",
+      component: SettingsView,
+      beforeEnter: [isAuthenticated],
+    },
+    {
+      path: "/direct/inbox/",
+      name: "messages",
+      component: MessagesView,
+      beforeEnter: [isAuthenticated],
+    },
+    {
+      path: "/:username/saved/",
+      name: "saved-items",
+      component: SavedView,
       beforeEnter: [isAuthenticated],
     },
     {

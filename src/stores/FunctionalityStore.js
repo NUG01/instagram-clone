@@ -3,11 +3,13 @@ import { defineStore } from "pinia";
 export const useFunctionalityStore = defineStore("useFunctionalityStore",{
  state(){
   return{
-      moreBarModal:false,
+      darkTheme:false,
+      reportProblem:false,
   }
  },
 
    getters:{
-    getMoreBarModal: (state)=>state.moreBarModal,
+    getDarkTheme: (state)=>state.darkTheme,
+    getReportProblem: (state)=>state.reportProblem,
  },
 });

@@ -40,6 +40,7 @@ export default {
     loginAttempt.value=true
     if((usernameValue.value.toLowerCase().match(emailRegex) || usernameValue.value.match(usernameRegex)) && passwordValue.value.match(passwordRegex)){
       try{
+        localStorage.removeItem('status')
         const res= await axios.post('login', {username: usernameValue.value, password: passwordValue.value,})
         authStore.user=res.data.user
         authStore.authenticated=true
@@ -49,6 +50,7 @@ export default {
        loginAttempt.value=false
        error.value=err.response.data
        credentialsError.value=true
+       localStorage.setItem('status', 401)
     }
     }
    }

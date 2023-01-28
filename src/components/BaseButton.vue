@@ -13,6 +13,7 @@ export default {
 }
 </script>
 
+
 <template>
 <button :type="buttonType" :class="[width ? width : 'w-[90%]', rounded ? rounded : 'rounded-[10px]']" class="flex items-center justify-center bg-[#0095f6] text-[#fff] text-[2.4rem] py-[1rem] font-[500] hover:bg-[#0074cc]"><slot></slot></button>
 </template>
