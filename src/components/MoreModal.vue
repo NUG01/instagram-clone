@@ -1,7 +1,7 @@
 <script>
 import SettingItem from "@/components/SettingItem.vue";
 import { useFunctionalityStore } from "@/stores/FunctionalityStore.js";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useAuthStore } from "@/stores/AuthStore.js";
 import axios from "@/config/axios/index.js";
 import { useRouter } from "vue-router";
@@ -13,11 +13,27 @@ export default {
        const functionality=useFunctionalityStore()
        const authStore=useAuthStore();
        const router=useRouter();
+       const themeColorDB=ref('')
 
 
        function changeTheme(){
          functionality.darkTheme=!functionality.darkTheme
-         localStorage.setItem('darkTheme', functionality.getDarkTheme);
+        if(functionality.getDarkTheme){
+            themeColorDB.value='dark'
+        }else{
+            themeColorDB.value='light'
+        }
+        axios.post('change-theme', {
+          themeColor: themeColorDB.value
+        })
+        .then((res)=>{
+
+          if(res.data.color=='dark'){
+             functionality.darkTheme=true
+          }else if(res.data.color=='light'){
+            functionality.darkTheme=false
+          }
+        })
 
        }
 
@@ -39,7 +55,6 @@ export default {
        authStore.user=null
        authStore.authenticated=false
        functionality.darkTheme=false
-       localStorage.removeItem('darkTheme')
        router.push({ name: 'landing' })
      }catch(err){
       alert('Something went wrong')

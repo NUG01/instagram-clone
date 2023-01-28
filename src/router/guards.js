@@ -22,7 +22,6 @@ export async function isLoggedIn() {
   const authStore = useAuthStore();
   
   if(authStore.getUser==null){
-    localStorage.removeItem('darkTheme')
     const res= await axios.get("user")
     if(res.data.user!=null){
       authStore.authenticated=true

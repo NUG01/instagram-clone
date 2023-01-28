@@ -15,15 +15,15 @@ export default {
 
 
     onMounted(async()=>{
-     
-      functionality.darkTheme=!localStorage.getItem('darkTheme')
       if(authStore.getUser==null){ 
         const res=await axios.get('user')
           authStore.user=res.data.user;
           if(authStore.getUser!=null){
             authStore.authenticated = true;
+            functionality.darkTheme=res.data.theme=='light' ? false : true
          }else{
            authStore.authenticated = false;
+           functionality.darkTheme=false
          }
       }else{
         authStore.authenticated = true;
@@ -37,7 +37,7 @@ export default {
 
       
     const themeColor = computed(() => {
-     return functionality.darkTheme ? 'dark-theme' : 'light-theme';
+     return functionality.getDarkTheme ? 'dark-theme' : 'light-theme';
    })
 
 
