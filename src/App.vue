@@ -4,9 +4,10 @@ import axios from "@/config/axios/index.js";
 import { useAuthStore } from "@/stores/AuthStore.js";
 import { useFunctionalityStore } from "@/stores/FunctionalityStore.js";
 import ReportProblem from "@/components/ReportProblem.vue";
+import SwitchAccounts from "@/components/SwitchAccounts.vue";
 
 export default {
-  components:{ReportProblem},
+  components:{ReportProblem, SwitchAccounts},
   setup() {
     const authStore=useAuthStore();
     const functionality=useFunctionalityStore()
@@ -34,6 +35,9 @@ export default {
     const problemReportActivated = computed(() => {
      return functionality.getReportProblem;
    })
+    const switchAccountsActivated = computed(() => {
+     return functionality.getSwitchAccounts;
+   })
 
       
     const themeColor = computed(() => {
@@ -43,7 +47,7 @@ export default {
 
 
 
-    return { dataIsFetched, themeColor, problemReportActivated }
+    return { dataIsFetched, themeColor, problemReportActivated, switchAccountsActivated }
   },
 }
 </script>
@@ -51,6 +55,7 @@ export default {
 <template>
   <main :class="themeColor" id="main">
    <div v-if="problemReportActivated && dataIsFetched" class="z-50"><report-problem></report-problem></div>
+   <div v-if="switchAccountsActivated && dataIsFetched" class="z-50"><switch-accounts></switch-accounts></div>
    <router-view v-if="dataIsFetched"></router-view>
   </main>
 </template>

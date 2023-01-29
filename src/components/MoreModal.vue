@@ -64,11 +64,14 @@ export default {
     function reportProblem(){
       functionality.reportProblem=true
     }
+    function switchAccounts(){
+      functionality.switchAccounts=true
+    }
 
 
     
     
-    return {changeTheme, themeColor, logoutHandle, reportProblem, pushSaved, pushSettings}
+    return {changeTheme, themeColor, logoutHandle, reportProblem, pushSaved, pushSettings, switchAccounts}
   },
 }
 </script>
@@ -110,12 +113,14 @@ export default {
         </div>
       </div>
       <div :class="themeColor" class="flex flex-col rounded-[7px] overflow-hidden">
+        <div @click="switchAccounts">
         <setting-item>
            <template v-slot:function>Switch accounts
            </template>
            <template v-slot:icon>Ic
            </template>
         </setting-item>
+        </div>
         <div @click="logoutHandle">
         <setting-item>
            <template v-slot:function>Log out
@@ -138,6 +143,5 @@ export default {
 .dark-theme{
   color:rgb(250, 250, 250);
   background-color: #4d4d4d;
-  /* box-shadow: 0 0 15px 0 #fafafa5d; */
   }
 </style>

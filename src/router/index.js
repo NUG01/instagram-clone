@@ -2,11 +2,13 @@ import { createRouter, createWebHistory } from "vue-router";
 import LandingView from "@/views/guestViews/LandingView.vue";
 import RegisterView from "@/views/guestViews/RegisterView.vue";
 import LoginView from "@/views/guestViews/LoginView.vue";
+import SwitchLoginView from "@/views/guestViews/SwitchLoginView.vue";
 import HomeView from "@/views/userViews/HomeView.vue";
 import ProfileView from "@/views/userViews/ProfileView.vue";
 import ExploreView from "@/views/userViews/ExploreView.vue";
 import MessagesView from "@/views/userViews/MessagesView.vue";
 import SettingsView from "@/views/userViews/SettingsView.vue";
+import ProfilePasswordresetView from "@/views/userViews/ProfilePasswordresetView.vue";
 import SavedView from "@/views/userViews/SavedView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import ForbiddenView from "@/views/guestViews/ForbiddenView.vue";
@@ -57,6 +59,18 @@ const router = createRouter({
       component: EasyLoginView,
       props:true,
       beforeEnter: [isLoggedIn],
+  },
+    { 
+      path: '/switch-account',
+      name: 'switch-account', 
+      component: SwitchLoginView,
+      beforeEnter: [isLoggedIn],
+  },
+    { 
+      path: '/accounts/password/reset',
+      name: 'accounts-password-reset', 
+      component: ProfilePasswordresetView,
+      beforeEnter: [isAuthenticated],
   },
     {
       path: "/home",

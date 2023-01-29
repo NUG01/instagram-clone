@@ -1,9 +1,9 @@
 <script>
 import BaseNavigation from "@/components/BaseNavigation.vue";
 import { useRouter } from "vue-router";
+import { computed } from "vue";
 import { useNavigationStore } from "@/stores/NavigationStore.js";
 import { useFunctionalityStore } from "@/stores/FunctionalityStore.js";
-import { computed } from "vue";
 
 
 export default {
@@ -14,12 +14,13 @@ export default {
 
         const router=useRouter();
         navigation.navigate()
-        navigation.messagesPage=true
+        functionality.switchAccounts=false
 
-
-const themeColor = computed(() => {
+           
+        const themeColor = computed(() => {
      return functionality.getDarkTheme ? 'dark-theme' : 'light-theme';
    })
+
 
     return {
       navigation,
@@ -31,9 +32,10 @@ const themeColor = computed(() => {
 
 <template>
 <div class="w-[100vw] h-[100vh]" :class="themeColor">
-  <base-navigation :activeExplore="navigation.getMessagesPage"></base-navigation>
+  <base-navigation></base-navigation>
 </div>
 </template>
+
 
 <style scoped>
 .light-theme{

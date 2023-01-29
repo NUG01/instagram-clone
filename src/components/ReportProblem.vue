@@ -84,7 +84,7 @@ export default {
 </script>
 
 <template>
-<div >
+<div>
 <div class="absolute top-0 left-0 w-[100vw] h-[100vh] bg-[#0000009f] z-30" @click="functionality.reportProblem=false"></div>
 <div :class="[functionality.getDarkTheme ? 'bg-[#212121]' : 'bg-[#fff]', problemReported ? 'modal-anim-done' : 'modal-anim']" class="absolute top-1/2 left-1/2 bg-[#fff] z-40 rounded-[20px] overflow-hidden">
 <close-icon :fill="[functionality.getDarkTheme ? '#fafafa' : '#000000b4']" class="cursor-pointer absolute right-0 top-0 -translate-x-full translate-y-[85%]" @click="functionality.reportProblem=false"></close-icon>
@@ -175,4 +175,4 @@ textarea{
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1.6rem;
 }
-</style>.
+</style>

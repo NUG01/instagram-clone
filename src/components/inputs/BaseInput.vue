@@ -2,12 +2,14 @@
 import { Field } from 'vee-validate';
 import { ref, watch, computed } from 'vue';
 import { useRegisterStore } from '@/stores/RegistrationStore.js';
+import { useFunctionalityStore } from "@/stores/FunctionalityStore.js";
 
 export default {
   props:['name', 'label', 'success', 'error', 'type', 'passwordIsFilled', 'width'],
   components:{Field},
   setup(props, context) {
     const registrationFormData = useRegisterStore();
+    const functionality=useFunctionalityStore()
 
      const inputName=props.name
      const label=props.label
@@ -75,7 +77,8 @@ export default {
       changePasswordType,
       passwordVisibilityState,
       passwordValueIsFilled,
-      width
+      width,
+      functionality
       }
   },
 }
@@ -84,8 +87,8 @@ export default {
 
 <template>
 <div class="relative" :class="[width ? width : 'w-[90%]']">
-  <label :for="inputName" :class="[model ? 'shrinkLabel' : '']" class="text-[#a7a7a7] text-[2.4rem] absolute top-1/2 left-0 translate-x-[1.6rem] -translate-y-1/2 pointer-events-none	">{{ label }}</label>
-  <input v-model="model" :type="type" :name="inputName" :id="inputName" @input="getValue(inputName)" class="w-[100%] h-[6.3rem] text-[2.4rem] text-[#636363] border-[#cdcdcd] focus:border-[#a7a7a7] focus:border-[1.5px] border-[1px] border-solid rounded-[3px] bg-[#f6f7f7c1] pl-[1.6rem]" :class="[type ? 'pr-[12rem]' : 'pr-[5rem]']" />
+  <label :for="inputName" :class="[model ? 'shrinkLabel' : '', functionality.getDarkTheme ? 'text-[#1f1f1f]' : 'text-[#a7a7a7]']" class="text-[2.4rem] absolute top-1/2 left-0 translate-x-[1.6rem] -translate-y-1/2 pointer-events-none	">{{ label }}</label>
+  <input v-model="model" :type="type" :name="inputName" :id="inputName" @input="getValue(inputName)" class="w-[100%] h-[6.3rem] text-[2.4rem] border-[#cdcdcd] focus:border-[#a7a7a7] focus:border-[1.5px] border-[1px] border-solid rounded-[3px] bg-[#f6f7f7c1] pl-[1.6rem]" :class="[type ? 'pr-[12rem]' : 'pr-[5rem]', functionality.getDarkTheme ? 'text-[#1f1f1f]' : 'text-[#636363]']" />
   <div class="absolute top-0 right-0" :class="[type ? '-translate-x-[12%] flex items-center justify-center gap-[0.5rem] translate-y-[25%]' : '-translate-x-1/2 translate-y-1/2']">
   <slot v-if="validationSuccess" name="success"></slot>
   <slot v-if="validationError" name="error"></slot>
