@@ -122,6 +122,10 @@ export default {
          }
          });
 
+          const hoverColor = computed(() => {
+     return functionality.getDarkTheme ? 'hover:bg-[#393939]' : 'hover:bg-gray-100';
+   })
+
             dataIsFetched.value=true
 
 
@@ -143,7 +147,8 @@ return {
   moreBarActive,
   dataIsFetched,
   functionality,
-  authStore
+  authStore,
+  hoverColor
 }
   },
 }
@@ -152,12 +157,12 @@ return {
 
 <template>
 <section v-if="dataIsFetched" class="w-[30rem] h-[100vh] border-r border-r-solid" :class="[functionality.getDarkTheme ? 'border-r-[#919191]' : 'border-r-[#cdcdcd]']">
-<div class="w-[100%] flex items-center justify-start pt-[4rem] px-[2rem]">
-  <div class="w-[12rem] cursor-pointer">
+<div class="w-[100%] flex items-center justify-start pt-[4rem] px-[3rem]">
+  <div class="w-[14rem] cursor-pointer">
     <instagram-svg @click="navigateToHome"></instagram-svg>
     </div>
   </div>
-<div class="flex flex-col items-start justify-start w-[100%] px-[0.8rem] mt-[5rem] gap-[1rem] rounded-[7px]">
+<div class="flex flex-col items-center justify-start w-[100%] px-[0.8rem] mt-[5rem] gap-[1rem] rounded-[7px]">
   <navigation-link @click="pushHome" :active="navigation.getHomePage">
      <template v-slot:icon>H
      </template>
@@ -201,7 +206,7 @@ return {
      </template>
   </navigation-link>
   <div class="relative w-[100%] more-top-parent mt-[33rem]">
-    <div :class="[moreBarActive ? 'font-[500]' : '']" class="text-[1.8rem] w-[100%] flex items-center gap-[1.6rem] px-[2rem] py-[1.5rem] rounded-[50px] cursor-pointer more-parent anim">
+    <div :class="[moreBarActive ? 'font-[500]' : '', hoverColor]" class="text-[1.8rem] flex justify-start items-center w-[95%] gap-[1.6rem] px-[3rem] py-[1.5rem] rounded-[50px] cursor-pointer more-parent anim">
        <div class="w-[1.8rem] more-icon">M</div>
        <div class="more-text">More</div>
    </div>

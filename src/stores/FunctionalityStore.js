@@ -5,11 +5,13 @@ export const useFunctionalityStore = defineStore("useFunctionalityStore",{
   return{
       darkTheme:false,
       reportProblem:false,
+      switchAccounts:false,
   }
  },
 
    getters:{
     getDarkTheme: (state)=>state.darkTheme,
     getReportProblem: (state)=>state.reportProblem,
+    getSwitchAccounts: (state)=>state.switchAccounts,
  },
 });

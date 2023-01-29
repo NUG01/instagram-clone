@@ -24,7 +24,7 @@ export default {
 </script>
 
 <template>
-<div :class="[active ? 'font-[500]' : '', hoverColor]" class="text-[2.4rem] w-[100%] flex items-center justify-start gap-[1.6rem] px-[2rem] py-[1.5rem] rounded-[50px] cursor-pointer parent">
+<div :class="[active ? 'font-[500]' : '', hoverColor]" class="text-[2.4rem] w-[95%] flex items-center justify-start gap-[1.6rem] px-[2rem] py-[1.5rem] rounded-[50px] cursor-pointer parent">
   <div class="w-[2rem] icon"><slot name="icon"></slot></div>
   <div><slot name="destination"></slot></div>
   </div>

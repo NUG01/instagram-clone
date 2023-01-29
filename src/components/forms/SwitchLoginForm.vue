@@ -2,25 +2,23 @@
 import { Form } from 'vee-validate';
 import BaseInput from "@/components/inputs/BaseInput.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import FormBorder from "@/components/FormBorder.vue";
 import ButtonSpinner from "@/components/ButtonSpinner.vue";
-import GoogleIcon from "@/components/icons/GoogleIcon.vue";
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import axios from "@/config/axios/index.js";
 import { useRouter } from 'vue-router';
 import { useAuthStore } from "@/stores/AuthStore.js";
-import { useNavigationStore } from "@/stores/NavigationStore.js";
+import { useFunctionalityStore } from "@/stores/FunctionalityStore.js";
 
 
 
 export default {
   emits:['updateValues',  'visiblePassword'],
-  components:{BaseInput,BaseButton, Form, FormBorder, GoogleIcon, ButtonSpinner},
+  components:{BaseInput,BaseButton, Form, ButtonSpinner},
   setup(props) {
 
    const router=useRouter()
    const authStore=useAuthStore();
-   const navigation=useNavigationStore()
+   const functionality=useFunctionalityStore()
 
    
    const usernameValue=ref('')
@@ -37,25 +35,17 @@ export default {
 
 
   async function onSubmit(){
-    credentialsError.value=false
-    error.value=''
-    loginAttempt.value=true
     if((usernameValue.value.toLowerCase().match(emailRegex) || usernameValue.value.match(usernameRegex)) && passwordValue.value.match(passwordRegex)){
-      try{
+      authStore.switchUsername=usernameValue.value
+      authStore.switchPassword=passwordValue.value
         localStorage.removeItem('status')
-        const res= await axios.post('login', {username: usernameValue.value, password: passwordValue.value,})
-        authStore.user=res.data.user
-        authStore.authenticated=true
-        loginAttempt.value=false
-        navigation.navigate()
-        navigation.homePage=true
-        router.push({ name: 'home'})
-     }catch(err){
-       loginAttempt.value=false
-       error.value=err.response.data
-       credentialsError.value=true
-      //  localStorage.setItem('status', 401)
-    }
+        await axios.post('logout').then(()=>{
+          router.push({ name: 'switch-account'})
+          authStore.user=null
+          authStore.authenticated=false
+          functionality.darkTheme=false
+          functionality.switchAccounts=false
+        })
     }
    }
 
@@ -88,17 +78,12 @@ function changePasswordType(){
  }
 }
 
-function googleSignup(){
-  window.location.href=import.meta.env.VITE_API_BASE_URL+'auth/google/redirect';
-
-}
    return { 
     onSubmit, 
     inputValuesUpdate, 
     registerButtonActivated, 
     changePasswordType, 
     passwordValueLength, 
-    googleSignup,
     loginAttempt,
     credentialsError,
     error,
@@ -115,14 +100,9 @@ function googleSignup(){
     <p v-if="!loginAttempt">Log in</p>
     <button-spinner v-else></button-spinner>
     </base-button>
-    <form-border class="mt-[1rem]"></form-border>
     <div class="flex flex-col items-center justify-center gap-[2rem]">
-      <div class="cursor-pointer flex items-center justify-center gap-[1rem]" @click="googleSignup"> 
-        <google-icon></google-icon>
-        <p class="text-[#385185] text-[2.4rem] font-[500]">Log in with Google</p>
-      </div>
      <div v-if="credentialsError" class="text-[#FA383E] text-[2.4rem] text-center">{{ error }}</div>
-      <router-link :to="{ name: 'forgot-password'}" class="text-[rgba(0, 55, 107)] text-[1.8rem]">
+      <router-link :to="{name: 'accounts-password-reset'}" class="text-[rgba(0, 55, 107)] text-[1.8rem]">
        Forgot password?
       </router-link>
     </div>
