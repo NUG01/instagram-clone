@@ -87,6 +87,7 @@ function changePasswordType(){
     loginAttempt,
     credentialsError,
     error,
+    functionality
     }
   }
 }
@@ -102,7 +103,7 @@ function changePasswordType(){
     </base-button>
     <div class="flex flex-col items-center justify-center gap-[2rem]">
      <div v-if="credentialsError" class="text-[#FA383E] text-[2.4rem] text-center">{{ error }}</div>
-      <router-link :to="{name: 'accounts-password-reset'}" class="text-[rgba(0, 55, 107)] text-[1.8rem]">
+      <router-link @click="functionality.switchAccounts=false" :to="{name: 'accounts-password-reset'}" class="text-[rgba(0, 55, 107)] text-[1.8rem]">
        Forgot password?
       </router-link>
     </div>

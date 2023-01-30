@@ -13,7 +13,7 @@ import SavedView from "@/views/userViews/SavedView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import ForbiddenView from "@/views/guestViews/ForbiddenView.vue";
 import PasswordForgotView from "@/views/guestViews/PasswordForgotView.vue";
-import PasswordRecoverView from "@/views/guestViews/PasswordRecoverView.vue";
+import PasswordRecoverView from "@/views/PasswordRecoverView.vue";
 import EasyLoginView from "@/views/guestViews/EasyLoginView.vue";
 import OAuthView from "@/views/guestViews/OAuthView.vue";
 import { isAuthenticated, isLoggedIn } from "@/router/guards.js";
@@ -51,7 +51,6 @@ const router = createRouter({
       name: 'recover-password', 
       component: PasswordRecoverView,
       props:true,
-      beforeEnter: [isLoggedIn],
   },
     { 
       path: '/easy-login/:id',
